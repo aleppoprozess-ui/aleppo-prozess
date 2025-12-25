@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aleppo Prozess - Deutsche Standards</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel für JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@0.446.0/dist/umd/lucide.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Animationen */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-modal-in {
+            animation: modalIn 0.3s ease-out forwards;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #1e3a8a; border-radius: 4px; }
+        
+        /* Fix für Icon-Größen */
+        [data-lucide] {
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        /**
+         * Icon Komponente für die Nutzung von Lucide im Browser.
+         */
+        const Icon = ({ name, size = 24, className = "" }) => {
+            const iconRef = useRef(null);
+            
+            useEffect(() => {
+                if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                    lucide.createIcons({
+                        attrs: {
+                            'stroke-width': 2,
+                            width: size,
+                            height: size,
+                        }
+                    });
+                }
+            }, [name, size, className]);
+
+            const kebabName = name
+                .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+                .toLowerCase();
+
+            return (
+                <i 
+                    data-lucide={kebabName} 
+                    className={className} 
+                    style={{ 
+                        width: size, 
+                        height: size,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                ></i>
+            );
+        };
+
+        const App = () => {
+            const CONTACT_EMAIL = "aleppoprozess@gmail.com";
+            // Startet nun standardmäßig auf Arabisch ('ar')
+            const [lang, setLang] = useState('ar');
+            const [scrolled, setScrolled] = useState(false);
+            const [isModalOpen, setIsModalOpen] = useState(false);
+            const [copyStatus, setCopyStatus] = useState(false);
+            
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 20);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const copyToClipboard = () => {
+                const textField = document.createElement('textarea');
+                textField.innerText = CONTACT_EMAIL;
+                document.body.appendChild(textField);
+                textField.select();
+                document.execCommand('copy');
+                textField.remove();
+                
+                setCopyStatus(true);
+                setTimeout(() => setCopyStatus(false), 2000);
+            };
+
+            const content = {
+                de: {
+                    nav: [
+                        { name: "Sektoren", id: "scenarios" }, 
+                        { name: "Services", id: "services" }, 
+                        { name: "Workflow", id: "workflow" }
+                    ],
+                    hero: { 
+                        badge: "Deutsche Standards für Syrien", 
+                        title: "Präzision im Wiederaufbau.", 
+                        sub: "Wir bringen deutsche Prozess-Standards (BPMN, ERP, Governance) in die Industrie von Aleppo. Wir verwandeln Komplexität in effiziente Struktur.", 
+                        cta: "E-Mail schreiben" 
+                    },
+                    modal: {
+                        title: "Kontaktieren Sie uns",
+                        sub: "Hier finden Sie unsere E-Mail-Adresse für Ihre Anfrage.",
+                        copy: "Adresse kopieren",
+                        copied: "Kopiert!",
+                        close: "Schließen"
+                    },
+                    scenarios: {
+                        title: "Anwendungsbereiche & Szenarien",
+                        subtitle: "Vom Chaos zur Kontrolle: Unsere Methoden sind das Betriebssystem für eine funktionierende Zukunft.",
+                        cta: "Egal in welchem Sektor – wir bringen die deutsche Prozesslogik in Ihr syrisches Projekt. Kontaktieren Sie uns für eine Sektor-Analyse.",
+                        items: [
+                            { title: "Energieversorger & Ampere-Betreiber", icon: "Zap", pain: "Hohe Netzverluste (technisch & Diebstahl), ineffiziente Diesel-Generatoren.", solution: "Smart Metering & 'Micro-MaKo' zur Bilanzierung von Ein- und Ausspeisung.", value: "20% weniger Dieselverbrauch, transparente Abrechnung." },
+                            { title: "Regierungsverwaltung & Kommunen", icon: "Building2", pain: "Papierchaos, fehlende Daten über Bürger, schwierige Steuererhebung.", solution: "Nutzung unserer Stammdaten-Struktur als Basis für ein digitales Kataster.", value: "Saubere Register, gerechte Ressourcenverteilung." },
+                            { title: "Wirtschaft & Investoren", icon: "LineChart", pain: "Investitionen in Syrien sind 'Blindflug'. Es gibt keine verlässlichen Marktdaten.", solution: "Anonymisierte Echtzeit-Daten über Energieverbrauch als Proxy für das BIP.", value: "Risikominimierung durch harte Daten statt Gerüchte." },
+                            { title: "Mittelstand & Industrie (KMU)", icon: "Factory", pain: "Stromausfall = Produktionsstopp. Teurer Diesel frisst die Marge.", solution: "Hybride Steuerung (PV-Diesel-Sync) und Lastmanagement-Prozesse.", value: "Konkurrenzfähige Exportpreise durch gesenkte Energiekosten." },
+                            { title: "Bauunternehmen & Bauträger", icon: "HardHat", pain: "Materialdiebstahl, Treibstoffklau aus Maschinen, unklare Projektfortschritte.", solution: "IoT-Tracking für Maschinen und digitale mobile Bestandsführung.", value: "Gläserne Baustellen, Projekte bleiben im Budget." },
+                            { title: "Schulen & Universitäten", icon: "GraduationCap", pain: "Kein Licht zum Lernen, kein Internet. Veraltete Infrastruktur.", solution: "Solare Inselsysteme für Computerräume + 'Offline-Cloud' mit Lerninhalten.", value: "Zugang zu modernem Wissen für Ingenieure." },
+                            { title: "Gesundheitssektor (Kliniken)", icon: "Stethoscope", pain: "Spannungsschwankungen zerstören MRT/CT. Kühlketten für Medikamente brechen.", solution: "USV-Management und präventive Wartungsprozesse (SLA) für Generatoren.", value: "Lebensrettende Geräte laufen 24/7 stabil. Schutz teurer Investitionen." },
+                            { title: "NGOs & Hilfsorganisationen", icon: "HeartHandshake", pain: "Spender fordern Impact-Tracking. Bargeldverteilung ist oft risikoreich.", solution: "Digitale 'Voucher'-Systeme über unsere App für Strom/Wasser statt Bargeld.", value: "Lückenloser Nachweis der Mittelverwendung, keine Korruption." }
+                        ]
+                    },
+                    services: {
+                        title: "Unsere Dienstleistungen",
+                        subtitle: "Ganzheitliche Optimierung für Industrie, Energie und Bau.",
+                        items: [
+                            { title: "Prozessaufnahme & Modellierung", desc: "Strukturierung Ihrer Abläufe mittels BPMN 2.0 Standards.", icon: "LayoutGrid" },
+                            { title: "Analyse & Optimierung (KVP)", desc: "Kontinuierlicher Verbesserungsprozess zur Effizienzsteigerung.", icon: "TrendingUp" },
+                            { title: "Dokumentation & Richtlinien", desc: "Erstellung rechtssicherer Standard Operating Procedures (SOPs).", icon: "FileText" },
+                            { title: "Prozess-Monitoring", desc: "Echtzeit-Überwachung Ihrer operativen Leistungsfähigkeit.", icon: "Activity" },
+                            { title: "Data Governance & Compliance", desc: "Regelwerke für sicheren und gesetzeskonformen Datenumgang.", icon: "ShieldCheck" },
+                            { title: "Datenqualitätssicherung", desc: "Validierung und Bereinigung Ihrer geschäftskritischen Daten.", icon: "CheckCircle2" },
+                            { title: "Stammdatenmanagement", desc: "Zentrale Verwaltung von Material-, Kunden- und Anlagendaten.", icon: "Database" },
+                            { title: "Anforderungsmanagement", desc: "Präzise Definition technischer Systemanforderungen.", icon: "ListChecks" },
+                            { title: "Automatisierung & KI", desc: "Einsatz von RPA und KI zur Beschleunigung repetitiver Aufgaben.", icon: "Cpu" },
+                            { title: "ERP- & System-Betreuung", desc: "Nachhaltige Wartung und Support Ihrer IT-Infrastruktur.", icon: "Settings" }
+                        ]
+                    },
+                    workflow: { title: "Der Weg zur Struktur", steps: [{ title: "Analyse", desc: "Wir erfassen Ihre aktuellen Bestände, Verbräuche und Abläufe direkt vor Ort.", icon: "Search" }, { title: "Blueprint", desc: "Erstellung eines digitalen Zwillings Ihrer Prozesse nach deutschen Standards.", icon: "Settings2" }, { title: "Rollout", desc: "Implementierung von Offline-Ready Software und Schulung Ihres Teams.", icon: "Rocket" }] },
+                    footer: { mailText: "E-Mail schreiben", copyright: "© 2024 ALEPPO PROZESS. DEUTSCHE STANDARDS." }
+                },
+                ar: {
+                    nav: [
+                        { name: "القطاعات", id: "scenarios" }, 
+                        { name: "الخدمات", id: "services" }, 
+                        { name: "آلية العمل", id: "workflow" }
+                    ],
+                    hero: { badge: "معايير ألمانية لسوريا", title: "الدقة في إعادة الإعمار.", sub: "نطبق معايير عمل ألمانية (BPMN, ERP) في صناعة حلب. نحول التعقيد إلى هيكلية فعالة.", cta: "إرسال بريد إلكتروني" },
+                    modal: {
+                        title: "اتصل بنا",
+                        sub: "تجدون هنا عنوان بريدنا الإلكتروني لتقديم طلباتكم.",
+                        copy: "نسخ العنوان",
+                        copied: "تم النسخ!",
+                        close: "إغلاق"
+                    },
+                    scenarios: {
+                        title: "مجالات التطبيق والسيناريوهات",
+                        subtitle: "من الفوضى إلى السيطرة: أساليبنا هي نظام التشغيل لمستقبل يعمل بكفاءة.",
+                        cta: "بغض النظر عن القطاع - نحن نطبق منطق عمل ألماني في مشروعك السوري. اتصل بنا لتحليل قطاعك.",
+                        items: [
+                            { title: "مزودو الطاقة والأمبيرات", icon: "Zap", pain: "خسائر عالية في الشبكة، مولدات غير فعالة.", solution: "القياس الذكي ونظام الموازنة (Micro-MaKo).", value: "توفير 20% من الديزل، فواتير شفافة." },
+                            { title: "الإدارات الحكومية والبلديات", icon: "Building2", pain: "فوضى ورقية، نقص في بيانات المواطنين.", solution: "استخدام هيكلية البيانات الأساسية لسجل رقمي.", value: "سجلات نظيفة، توزيع عادل للموارد." },
+                            { title: "الاقتصاديون والمستثمرون", icon: "LineChart", pain: "الاستثمار في سوريا 'طيران أعمى'. لا بيانات موثوقة.", solution: "بيانات فورية عن استهلاك الطاقة كمؤشر اقتصادي.", value: "تقليل المخاطر عبر بيانات صلبة." },
+                            { title: "الصناعات المتوسطة (حلب)", icon: "Factory", pain: "انقطاع الكهرباء يوقف الإنتاج. الديزل يستنزف الأرباح.", solution: "التحكم الهجين وعمليات إدارة الأحمال.", value: "أسعار تصدير تنافسية بفضل خفض التكاليف." },
+                            { title: "شركات الإنشاءات", icon: "HardHat", pain: "سرقة المواد والوقود، عدم وضوح تقدم المشروع.", solution: "تتبع IoT للآلات وإدارة المخزون الرقمي.", value: "مواقع بناء شفافة، مشاريع تلتزم بالميزانية." },
+                            { title: "المدارس والجامعات", icon: "GraduationCap", pain: "لا إضاءة للدراسة، لا إنترنت. بنية تحتية قديمة.", solution: "أنظمة شمسية مستقلة + 'سحابة أوفلاين'.", value: "الوصول للمعرفة للجيل القادم من المهندسين." },
+                            { title: "القطاع الصحي (المشافي)", icon: "Stethoscope", pain: "تذبذب الجهد يدمر الأجهزة. انقطاع التبريد للأدوية.", solution: "إدارة الـ UPS وعمليات صيانة وقائية.", value: "أجهزة إنقاذ الحياة تعمل باستقرار 24/7." },
+                            { title: "المنظمات غير الحكومية", icon: "HeartHandshake", pain: "المانحون يطلبون تتبع الأثر. توزيع النقد مخاطرة.", solution: "أنظمة 'قسائم' رقمية للكهرباء والماء.", value: "إثبات كامل لاستخدام الأموال، لا فساد." }
+                        ]
+                    },
+                    services: {
+                        title: "خدماتنا المهنية",
+                        subtitle: "تحسين شامل لقطاعات الصناعة والطاقة والإنشاءات.",
+                        items: [
+                            { title: "تسجيل ونمذجة العمليات", desc: "هيكلة إجراءات العمل باستخدام معايير BPMN 2.0.", icon: "LayoutGrid" },
+                            { title: "التحليل والتحسين المستمر", desc: "عمليات تحسين مستمرة لزيادة الكفاءة التشغيلية.", icon: "TrendingUp" },
+                            { title: "التوثيق والسياسات", desc: "إنشاء إجراءات تشغيل قياسية (SOPs) وضوابط العمل.", icon: "FileText" },
+                            { title: "مراقبة العمليات", desc: "رصد الأداء التشغيلي في الوقت الفعلي.", icon: "Activity" },
+                            { title: "حوكمة البيانات والامتثال", desc: "قواعد التعامل الآمن والمتوافق مع البيانات.", icon: "ShieldCheck" },
+                            { title: "ضمان جودة البيانات", desc: "التحقق من صحة وتصفية البيانات الحساسة.", icon: "CheckCircle2" },
+                            { title: "إدارة البيانات الأساسية", desc: "الإدارة المركزية لبيانات المواد والعملاء والأصول.", icon: "Database" },
+                            { title: "إدارة المتطلبات", desc: "التعريف الدقيق للمتطلبات التقنية للنظم.", icon: "ListChecks" },
+                            { title: "الأتمتة والذكاء الاصطناعي", desc: "استخدام RPA والذكاء الاصطناعي لتسريع المهام.", icon: "Cpu" },
+                            { title: "دعم أنظمة ERP", desc: "صيانة ودعم مستدام للبنية التحتية للمعلومات.", icon: "Settings" }
+                        ]
+                    },
+                    workflow: { title: "آلية التحول الرقمي", steps: [{ title: "التحليل", desc: "رصد المخزون ميدانياً.", icon: "Search" }, { title: "المخطط", desc: "تصميم نموذج رقمي وفق المعايير.", icon: "Settings2" }, { title: "التنفيذ", desc: "تركيب البرامج الجاهزة.", icon: "Rocket" }] },
+                    footer: { mailText: "إرسال بريد إلكتروني", copyright: "© 2024 ALEPPO PROZESS. DEUTSCHE STANDARDS." }
+                }
+            };
+
+            const t = content[lang];
+            const isRTL = lang === 'ar';
+            const contactLink = `mailto:${CONTACT_EMAIL}`;
+
+            return (
+                <div className={`min-h-screen bg-slate-50 text-slate-900 ${isRTL ? 'text-right' : 'text-left'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+                    
+                    {/* Navigation */}
+                    <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-md border-b py-2' : 'bg-transparent py-4'}`}>
+                        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center h-16">
+                            <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo(0,0)}>
+                                <div className="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg">A</div>
+                                <div className={`flex flex-col ${isRTL ? 'text-right' : 'text-left'}`}>
+                                    <span className="font-black text-lg text-blue-950 uppercase leading-none">{lang === 'de' ? 'Aleppo Prozess' : 'عملية حلب'}</span>
+                                    <span className="text-[10px] text-slate-400 font-bold tracking-widest uppercase">Precision</span>
+                                </div>
+                            </div>
+                            <div className="hidden md:flex items-center gap-8">
+                                {t.nav.map(item => (
+                                    <a key={item.id} href={`#${item.id}`} className="text-xs font-bold uppercase text-slate-500 hover:text-blue-900 transition-colors">
+                                        {item.name}
+                                    </a>
+                                ))}
+                                <button onClick={() => setLang(lang === 'de' ? 'ar' : 'de')} className="flex items-center gap-2 text-xs font-black bg-slate-100 px-4 py-2 rounded-full border border-slate-200 transition-colors hover:bg-slate-200">
+                                    <Icon name="Globe" size={14} /> {lang === 'de' ? 'العربية' : 'DEUTSCH'}
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Hero */}
+                    <section className="pt-48 pb-24 bg-white overflow-hidden relative">
+                        <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-50 -skew-x-12 translate-x-1/4 pointer-events-none opacity-50"></div>
+                        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center relative z-10">
+                            <div className="animate-fade-in">
+                                <span className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-black uppercase mb-6 border border-blue-100 tracking-widest">{t.hero.badge}</span>
+                                <h1 className="text-5xl lg:text-7xl font-black text-blue-950 leading-tight mb-8">{t.hero.title}</h1>
+                                <p className="text-lg text-slate-500 mb-10 max-w-lg leading-relaxed">{t.hero.sub}</p>
+                                <div className="flex flex-wrap gap-4">
+                                    <button 
+                                        onClick={() => setIsModalOpen(true)}
+                                        className="bg-blue-900 text-white px-10 py-5 rounded-2xl font-bold flex items-center gap-3 hover:bg-blue-800 shadow-xl transition-all hover:scale-105 active:scale-95"
+                                    >
+                                        <Icon name="Mail" size={24} /> {t.hero.cta}
+                                    </button>
+                                    <div className="flex items-center gap-3 px-6 py-4 rounded-xl bg-white border border-slate-100 text-slate-400">
+                                        <Icon name="WifiOff" size={20} className="text-emerald-500"/>
+                                        <span className="text-xs font-bold uppercase tracking-wider">Offline-Ready</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="rounded-[3rem] overflow-hidden shadow-2xl bg-slate-100 aspect-[4/3] group">
+                                <img 
+                                    src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Aleppo_Citadel_04.jpg" 
+                                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 hover:scale-105" 
+                                    alt="Aleppo Citadel" 
+                                />
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Scenarios */}
+                    <section id="scenarios" className="py-32 bg-slate-50">
+                        <div className="max-w-7xl mx-auto px-6">
+                            <div className="text-center mb-20">
+                                <h2 className="text-4xl lg:text-5xl font-black text-blue-950 uppercase tracking-tight mb-6">{t.scenarios.title}</h2>
+                                <p className="text-slate-500 max-w-3xl mx-auto text-lg leading-relaxed">{t.scenarios.subtitle}</p>
+                            </div>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                                {t.scenarios.items.map((item, i) => (
+                                    <div key={i} className="bg-white p-10 rounded-[2.5rem] border border-slate-100 hover:shadow-2xl hover:border-blue-200 transition-all duration-500 flex flex-col h-full group">
+                                        <div className="w-14 h-14 bg-blue-50 text-blue-900 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-blue-900 group-hover:text-white transition-all duration-300">
+                                            <Icon name={item.icon} size={28} />
+                                        </div>
+                                        <h3 className="font-black text-blue-950 mb-6 uppercase text-sm leading-tight tracking-wide">{item.title}</h3>
+                                        <div className="space-y-6 flex-grow">
+                                            <div>
+                                                <span className="text-[10px] font-black text-red-500 uppercase tracking-widest block mb-1">Status Quo</span>
+                                                <p className="text-[11px] text-slate-500 italic leading-relaxed">"{item.pain}"</p>
+                                            </div>
+                                            <div>
+                                                <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest block mb-1">APEH Lösung</span>
+                                                <p className="text-[11px] text-slate-700 font-bold leading-relaxed">{item.solution}</p>
+                                            </div>
+                                        </div>
+                                        <div className="pt-6 mt-8 border-t border-slate-50 text-[10px] font-black text-emerald-600 uppercase tracking-widest">{item.value}</div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-24 p-12 bg-blue-950 rounded-[3rem] text-center text-white shadow-2xl relative overflow-hidden group">
+                                <div className="relative z-10">
+                                    <p className="text-xl lg:text-2xl font-bold mb-10 italic opacity-90 leading-relaxed max-w-4xl mx-auto">{t.scenarios.cta}</p>
+                                    <button 
+                                        onClick={() => setIsModalOpen(true)}
+                                        className="inline-flex items-center gap-3 bg-white text-blue-950 px-10 py-5 rounded-2xl font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
+                                    >
+                                        <Icon name="Mail" size={24} /> {lang === 'de' ? 'Analyse anfragen' : 'طلب تحليل'}
+                                    </button>
+                                </div>
+                                <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-900/20 skew-x-12 translate-x-1/2 transition-transform group-hover:translate-x-1/3"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Services */}
+                    <section id="services" className="py-32 bg-white">
+                        <div className="max-w-7xl mx-auto px-6">
+                            <div className="text-center mb-20">
+                                <h2 className="text-4xl lg:text-5xl font-black text-blue-950 uppercase tracking-tight mb-6">{t.services.title}</h2>
+                                <p className="text-slate-500 max-w-3xl mx-auto text-lg leading-relaxed">{t.services.subtitle}</p>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+                                {t.services.items.map((s, i) => (
+                                    <div key={i} className="group p-8 rounded-3xl border border-slate-50 bg-slate-50/30 hover:bg-white hover:border-blue-100 hover:shadow-xl transition-all h-full">
+                                        <div className="mb-6 text-blue-900 group-hover:scale-110 group-hover:text-blue-600 transition-all">
+                                            <Icon name={s.icon} size={28} />
+                                        </div>
+                                        <h3 className="text-sm font-black mb-3 text-blue-950 uppercase tracking-tight">{s.title}</h3>
+                                        <p className="text-[11px] text-slate-400 leading-relaxed font-medium">{s.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Workflow */}
+                    <section id="workflow" className="py-32 bg-slate-50">
+                        <div className="max-w-7xl mx-auto px-6">
+                            <div className="text-center mb-20">
+                                <h2 className="text-4xl font-black text-blue-950 uppercase tracking-tight">{t.workflow.title}</h2>
+                                <div className="w-20 h-1.5 bg-blue-900 mx-auto rounded-full mt-6"></div>
+                            </div>
+                            <div className="flex flex-col md:flex-row justify-center gap-12 items-start relative">
+                                <div className="hidden md:block absolute top-12 left-0 w-full h-0.5 bg-slate-200 -z-0"></div>
+                                {t.workflow.steps.map((step, i) => (
+                                    <div key={i} className="flex flex-col items-center text-center flex-1 group relative z-10">
+                                        <div className="w-24 h-24 bg-white border border-slate-200 text-blue-900 rounded-[2rem] flex items-center justify-center mb-8 shadow-xl transition-all group-hover:-translate-y-2 group-hover:bg-blue-900 group-hover:text-white group-hover:shadow-blue-900/20">
+                                            <Icon name={step.icon} size={40} />
+                                        </div>
+                                        <h3 className="font-black text-blue-950 uppercase text-sm mb-3 tracking-wider">{step.title}</h3>
+                                        <p className="text-xs text-slate-500 px-6 leading-relaxed font-medium">{step.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Footer */}
+                    <footer className="py-24 border-t bg-white">
+                        <div className="max-w-7xl mx-auto px-6 text-center">
+                            <div className="w-16 h-16 bg-blue-900 text-white rounded-2xl flex items-center justify-center font-bold text-2xl mx-auto mb-12 shadow-xl shadow-blue-900/20 transition-transform hover:rotate-6">A</div>
+                            <div className="flex flex-col items-center gap-8 mb-12">
+                                <button 
+                                    onClick={() => setIsModalOpen(true)}
+                                    className="text-blue-950 font-black text-sm uppercase tracking-[0.3em] border-b-2 border-blue-950 pb-2 flex items-center gap-3 hover:text-blue-700 hover:border-blue-700 transition-colors"
+                                >
+                                    <Icon name="Mail" size={20} /> {t.footer.mailText}
+                                </button>
+                                <span className="text-slate-400 font-bold text-xs tracking-widest">{CONTACT_EMAIL}</span>
+                            </div>
+                            <p className="text-slate-300 text-[10px] font-black tracking-[0.5em] uppercase">{t.footer.copyright}</p>
+                        </div>
+                    </footer>
+
+                    {/* MODAL WINDOW */}
+                    {isModalOpen && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                            <div 
+                                className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm"
+                                onClick={() => setIsModalOpen(false)}
+                            ></div>
+                            <div className="bg-white rounded-[2.5rem] w-full max-w-lg relative z-10 shadow-2xl border border-slate-100 overflow-hidden animate-modal-in">
+                                <div className="p-8 md:p-12 text-center">
+                                    <div className="w-20 h-20 bg-blue-50 text-blue-900 rounded-3xl flex items-center justify-center mx-auto mb-8">
+                                        <Icon name="Mail" size={32} />
+                                    </div>
+                                    <h2 className="text-3xl font-black text-blue-950 mb-4">{t.modal.title}</h2>
+                                    <p className="text-slate-500 mb-10 leading-relaxed font-medium">
+                                        {t.modal.sub}
+                                    </p>
+                                    
+                                    <div className="bg-slate-50 rounded-2xl p-6 mb-10 flex flex-col items-center justify-between border border-slate-100">
+                                        <span className="text-blue-950 font-bold text-lg mb-4 select-all">{CONTACT_EMAIL}</span>
+                                        <button 
+                                            onClick={copyToClipboard}
+                                            className={`flex items-center gap-2 text-xs font-black uppercase tracking-widest transition-all ${copyStatus ? 'text-emerald-600' : 'text-blue-600 hover:text-blue-800'}`}
+                                        >
+                                            <Icon name={copyStatus ? "CheckCircle2" : "ClipboardList"} size={16} />
+                                            {copyStatus ? t.modal.copied : t.modal.copy}
+                                        </button>
+                                    </div>
+
+                                    <div className="flex flex-col gap-4">
+                                        <button 
+                                            onClick={() => setIsModalOpen(false)}
+                                            className="w-full bg-blue-900 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-blue-900/20 hover:bg-blue-800 transition-all flex items-center justify-center gap-3"
+                                        >
+                                            {t.modal.close}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="h-2 bg-blue-900 w-full"></div>
+                            </div>
+                        </div>
+                    )}
+                    
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
