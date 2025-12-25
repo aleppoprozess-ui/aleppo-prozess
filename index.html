@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AleppoProzess.de - Deutsche Standards</title>
     
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Deutsche Standards für den Wiederaufbau in Aleppo. Prozessoptimierung, BPMN und digitale Infrastruktur für Energie, Industrie und Verwaltung.">
+    <meta name="keywords" content="Aleppo, Wiederaufbau, Syrien, Deutsche Standards, Prozessmanagement, BPMN, Energieversorgung, Digitalisierung">
+    <meta name="author" content="AleppoProzess.de">
+
+    <!-- Open Graph Tags (Social Media) -->
+    <meta property="og:title" content="AleppoProzess.de - Präzision & Struktur">
+    <meta property="og:description" content="Wir bringen deutsche Prozesslogik in syrische Projekte. Lösungen für Energie, Bau und Verwaltung.">
+    <meta property="og:url" content="https://aleppoprozess.de/">
+    <meta property="og:type" content="website">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -59,7 +70,52 @@
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <!-- 
+        Statischer Inhalt für SEO und Bots.
+        Dieser Inhalt wird angezeigt, bevor React lädt, oder wenn JavaScript deaktiviert ist (z.B. bei Crawlern).
+        React überschreibt diesen Inhalt beim Start (Hydration).
+    -->
+    <div id="root">
+        <!-- Deutscher statischer Inhalt -->
+        <div lang="de" dir="ltr">
+            <header style="padding: 20px; text-align: center;">
+                <h1>AleppoProzess.de - Deutsche Standards für den Wiederaufbau</h1>
+                <p>Wir transformieren komplexe Herausforderungen in funktionierende Prozesse.</p>
+            </header>
+            <main style="padding: 20px; max-width: 800px; margin: 0 auto;">
+                <h2>Lösungen für Energie, Verwaltung und Industrie</h2>
+                <p>Wir bringen deutsche Prozesslogik in syrische Projekte. Von BPMN bis ERP – wir strukturieren Energie, Industrie und Verwaltung neu.</p>
+                <ul>
+                    <li><strong>Energieversorger:</strong> Digitale Bilanzierung und Micro-MaKo zur Verlustminimierung.</li>
+                    <li><strong>Regierung & Kommunen:</strong> Zentrales Stammdatenmanagement für effiziente Bürgerdienste.</li>
+                    <li><strong>Industrie:</strong> Intelligentes Lastmanagement zur Senkung der Betriebskosten.</li>
+                    <li><strong>Bauwesen:</strong> Lückenloses Asset-Tracking für Kostensicherheit.</li>
+                </ul>
+                <p>Kontakt: aleppoprozess@gmail.com</p>
+            </main>
+        </div>
+
+        <hr style="margin: 40px auto; max-width: 200px; border-top: 1px solid #ccc;">
+
+        <!-- Arabischer statischer Inhalt (SEO) -->
+        <div lang="ar" dir="rtl" style="text-align: right;">
+            <header style="padding: 20px; text-align: center;">
+                <h1>AleppoProzess.de - معايير ألمانية لإعادة الإعمار</h1>
+                <p>نضع خلاصة التخطيط الألماني في خدمة مشاريع إعادة الإعمار بحلب.</p>
+            </header>
+            <main style="padding: 20px; max-width: 800px; margin: 0 auto;">
+                <h2>حلول ذكية لقطاعات الطاقة والإدارة والصناعة</h2>
+                <p>نستبدل العشوائية الإدارية بأنظمة رقمية دقيقة. من BPMN إلى أنظمة ERP - نعيد هيكلة البنية التحتية.</p>
+                <ul>
+                    <li><strong>مزودو الطاقة:</strong> موازنة رقمية دقيقة (Micro-MaKo) لتقليل الهدر والسرقات.</li>
+                    <li><strong>الحكومة والبلديات:</strong> سجل مدني رقمي موحد لتحسين خدمات المواطنين.</li>
+                    <li><strong>الصناعة:</strong> إدارة أحمال ذكية لخفض تكاليف الوقود والتشغيل.</li>
+                    <li><strong>الإنشاءات:</strong> تتبع آلي للأصول (IoT) لضبط الميزانيات.</li>
+                </ul>
+                <p>للتواصل: aleppoprozess@gmail.com</p>
+            </main>
+        </div>
+    </div>
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
@@ -489,5 +545,4 @@
         root.render(<App />);
     </script>
 </body>
-
 </html>
