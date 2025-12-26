@@ -160,8 +160,22 @@
 
         const App = () => {
             const CONTACT_EMAIL = "aleppoprozess@gmail.com";
-            // Startet standardmäßig auf Arabisch ('ar')
-            const [lang, setLang] = useState('ar');
+            
+            // SPRACHERKENNUNG
+            const [lang, setLang] = useState(() => {
+                if (typeof navigator !== 'undefined') {
+                    const userLang = navigator.language || navigator.userLanguage || '';
+                    return userLang.startsWith('ar') ? 'ar' : 'de';
+                }
+                return 'de';
+            });
+
+            // Update HTML lang and dir attributes when language changes
+            useEffect(() => {
+                document.documentElement.lang = lang;
+                document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            }, [lang]);
+
             const [scrolled, setScrolled] = useState(false);
             const [isModalOpen, setIsModalOpen] = useState(false);
             const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -237,7 +251,7 @@
                             { title: "ERP- & System-Betreuung", desc: "Nachhaltige Wartung und Support Ihrer IT-Infrastruktur.", icon: "Settings" }
                         ]
                     },
-                    workflow: { title: "In 3 Schritten zur Effizienz", steps: [{ title: "Analyse", desc: "Wir erfassen Ihre aktuellen Bestände, Verbräuche und Abläufe direkt vor Ort.", icon: "Search" }, { title: "Blueprint", desc: "Erstellung eines digitalen Zwillings Ihrer Prozesse nach deutschen Standards.", icon: "Settings2" }, { title: "Rollout", desc: "Implementierung von Offline-Ready Software und Schulung Ihres Teams.", icon: "Rocket" }] },
+                    workflow: { title: "In 3 Schritten zur Effizienz", steps: [{ title: "Analyse", desc: "Wir erfassen Ihre aktuellen Bestände, Verbräuche und Abläufe.", icon: "Search" }, { title: "Blueprint", desc: "Erstellung eines digitalen Zwillings Ihrer Prozesse nach deutschen Standards.", icon: "Settings2" }, { title: "Rollout", desc: "Implementierung von Offline-Ready Software und Schulung Ihres Teams.", icon: "Rocket" }] },
                     footer: { mailText: "Kostenloses Erstgespräch anfordern", copyright: "© 2026 ALEPPOPROZESS.DE" }
                 },
                 ar: {
@@ -286,7 +300,7 @@
                             { title: "دعم أنظمة ERP", desc: "صيانة مستدامة للبنية التحتية المعلوماتية.", icon: "Settings" }
                         ]
                     },
-                    workflow: { title: "خارطة التحول الرقمي", steps: [{ title: "التحليل الميداني", desc: "رصد الواقع والمخزون بدقة.", icon: "Search" }, { title: "التصميم المعياري", desc: "بناء النموذج الرقمي وفق المعايير.", icon: "Settings2" }, { title: "التنفيذ والتمكين", desc: "تثبيت الأنظمة وتدريب الكوادر.", icon: "Rocket" }] },
+                    workflow: { title: "خارطة التحول الرقمي", steps: [{ title: "التحليل ", desc: "رصد الواقع والمخزون بدقة.", icon: "Search" }, { title: "التصميم المعياري", desc: "بناء النموذج الرقمي وفق المعايير.", icon: "Settings2" }, { title: "التنفيذ والتمكين", desc: "تثبيت الأنظمة وتدريب الكوادر.", icon: "Rocket" }] },
                     footer: { mailText: "ابدأ استشارتك المجانية", copyright: "© 2026 ALEPPOPROZESS.DE" }
                 }
             };
@@ -359,7 +373,9 @@
 
                     {/* Hero */}
                     <section className="pt-48 pb-24 bg-white overflow-hidden relative">
-                        <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-50 -skew-x-12 translate-x-1/4 pointer-events-none opacity-50"></div>
+                        {/* Symmetrischer Hintergrund: Spiegelt sich bei RTL */}
+                        <div className={`absolute top-0 w-1/2 h-full bg-slate-50 pointer-events-none opacity-50 ${isRTL ? 'left-0 skew-x-12 -translate-x-1/4' : 'right-0 -skew-x-12 translate-x-1/4'}`}></div>
+                        
                         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center relative z-10">
                             <div className="animate-fade-in">
                                 <span className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-black uppercase mb-6 border border-blue-100 tracking-widest">{t.hero.badge}</span>
@@ -431,7 +447,8 @@
                                         <Icon name="Mail" size={24} /> {lang === 'de' ? 'Analyse anfragen' : 'طلب تحليل'}
                                     </button>
                                 </div>
-                                <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-900/20 skew-x-12 translate-x-1/2 transition-transform group-hover:translate-x-1/3"></div>
+                                {/* Symmetrischer CTA Hintergrund */}
+                                <div className={`absolute top-0 w-1/3 h-full bg-blue-900/20 transition-transform ${isRTL ? 'left-0 -skew-x-12 -translate-x-1/2 group-hover:-translate-x-1/3' : 'right-0 skew-x-12 translate-x-1/2 group-hover:translate-x-1/3'}`}></div>
                             </div>
                         </div>
                     </section>
